@@ -13,40 +13,39 @@ export default function Home() {
   const section2Ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // 英雄区文字渐入
+    const heroElements = heroRef.current?.querySelectorAll('*') || [];
+    
     gsap.fromTo(
-      heroRef.current?.children,
+      heroElements,
       { y: 50, opacity: 0 },
       { y: 0, opacity: 1, duration: 1, stagger: 0.2, ease: "power3.out" }
     );
 
-    // 滚动触发动画
-    [section1Ref, section2Ref].forEach((ref, i) => {
-      gsap.fromTo(
-        ref.current,
-        { y: 100, opacity: 0 },
-        {
-          y: 0,
-          opacity: 1,
-          duration: 1,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ref.current,
-            start: "top 80%",
-          },
-        }
-      );
+    [section1Ref, section2Ref].forEach((ref) => {
+      if (ref.current) {
+        gsap.fromTo(
+          ref.current,
+          { y: 100, opacity: 0 },
+          {
+            y: 0,
+            opacity: 1,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: ref.current,
+              start: "top 80%",
+            },
+          }
+        );
+      }
     });
   }, []);
 
   return (
     <main className="min-h-screen">
-      {/* 固定在背景的3D场景 */}
       <Scene />
 
-      {/* 滚动内容层 */}
       <div className="relative z-10">
-        {/* 第一屏：英雄区 */}
         <section className="h-screen flex flex-col justify-center items-center text-center px-4">
           <div ref={heroRef} className="space-y-6">
             <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-cyan-400 via-purple-500 to-yellow-400 bg-clip-text text-transparent">
@@ -61,7 +60,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 第二屏：关于我 */}
         <section ref={section1Ref} className="h-screen flex flex-col justify-center items-center text-center px-4 bg-black/50 backdrop-blur-sm">
           <h2 className="text-4xl md:text-6xl font-bold mb-6 text-white">About Me</h2>
           <p className="text-lg md:text-xl text-gray-300 max-w-3xl leading-relaxed">
@@ -70,7 +68,6 @@ export default function Home() {
           </p>
         </section>
 
-        {/* 第三屏：作品展示 */}
         <section ref={section2Ref} className="min-h-screen py-20 px-4">
           <div className="max-w-6xl mx-auto">
             <h2 className="text-4xl md:text-6xl font-bold text-center mb-16 text-white">Selected Works</h2>
@@ -84,7 +81,6 @@ export default function Home() {
           </div>
         </section>
 
-        {/* 页脚 */}
         <footer className="py-10 text-center text-gray-500 border-t border-white/10">
           <p>© 2026 Creative Dev. Built with Next.js & R3F.</p>
         </footer>
